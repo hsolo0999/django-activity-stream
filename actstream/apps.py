@@ -17,12 +17,13 @@ class ActstreamConfig(AppConfig):
             try:
                 if settings.USE_POSTGRES:
                     from django.contrib.postgres.fields import JSONField
+                    JSONField(blank=True, null=True).contribute_to_class(action_class, 'data')
                 else:
                     from jsonfield_compat import JSONField, register_app
+                    JSONField(blank=True, null=True).contribute_to_class(action_class, 'data')
+                    register_app(self)
             except ImportError:
                 raise ImproperlyConfigured(
                     'You must have django-jsonfield and django-jsonfield-compat '
                     'installed if you wish to use a JSONField on your actions'
                 )
-            JSONField(blank=True, null=True).contribute_to_class(action_class, 'data')
-            register_app(self)
